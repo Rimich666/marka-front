@@ -25,7 +25,6 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -76,4 +75,18 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 20px repeat(5, 1fr);
+    gap: 15px;
+  }
+
+.cell {
+  margin: 0;
+}
+
+.cell-text{
+  text-align: left;
 }

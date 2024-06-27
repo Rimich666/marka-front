@@ -1,17 +1,54 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+  import axios from 'axios';
+  import Head from "./components/Head.vue";
+  import Row from "./components/Row.vue";
+  import {ref, watchEffect} from "vue";
+  import {TopRowProps} from "./components/TopRow.vue";
+
+  type RawData = {
+    name: string;
+    id: number;
+    tutorName: string;
+    tutorId: number;
+    statusID: number;
+    pipeline: number;
+    statusName: string;
+    budget: number;
+    date: Date;
+    color: string;
+  }
+
+  const leads = ref(null as unknown as TopRowProps[]);
+
+  async function adaptLeans(data: RawData[]): Promise<TopRowProps[]> {
+    return data.map((item: RawData) => ({
+      name: item.name,
+      key: item.id,
+      budget: item.budget,
+      status: item.statusName,
+      tutor: item.tutorName,
+      date: item.date,
+    }))
+  }
+
+  watchEffect(async () => {
+    leads.value = await getData();
+  })
+  async function getData() {
+    const {data} = await axios.get('http://localhost:3000/api/leads');
+    return adaptLeans(data);
+  }
+
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <Head/>
+  <Row
+    v-for="(item) in leads"
+    :top="item"
+    :key="item.key"
+/>
+
 </template>
 
 <style scoped>
